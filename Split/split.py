@@ -25,11 +25,11 @@ class CFG:
     Outputs:
     - CFG: Configuration object for SplitSet.
     """
-    OK_DIR: Path = Path(r"Q:\VisualStudio\ML_Model\data\zdjecia_kopia\dobre")
-    NOK_ORIG_DIR: Path = Path(r"Q:\VisualStudio\ML_Model\data\zdjecia_kopia\zle")
-    NOK_AUG_DIR: Path = Path(r"Q:\VisualStudio\ML_Model\data\augmented3")
+    OK_DIR: Path = Path(r"data/input_data/ok")
+    NOK_ORIG_DIR: Path = Path(r"data/input_data/nok")
+    NOK_AUG_DIR: Path = Path(r"data/nok_augmented")
 
-    OUT_ROOT: Path = Path(r"Q:\VisualStudio\ML_Model\InputData3")
+    OUT_ROOT: Path = Path(r"data/Split")
     VAL_SIZE: float = 0.15
     TEST_SIZE: float = 0.15
     SEED1: int = 42
