@@ -207,12 +207,12 @@ class PredictPhoto:
 
 
 class GradCam:
-    """Grad-CAM visualization for a single image.
-    Loads model weights, runs inference, and produces a heatmap overlay
-    to inspect which regions influenced the decision.
+    """
+    Grad-CAM
+    Loads model weights, runs inference and produces a heatmap overlay.
     Parameters:
-        cfg: Inference/visualization configuration.
-        model: Torch model used for inference and Grad-CAM.
+    - cfg (CFG): Inference and visualization configuration.
+    - model (nn.Module): Torch model used for inference and Grad-CAM.
     """
     def __init__(self, cfg: CFG, model: nn.Module):
         self.config = cfg
@@ -224,11 +224,11 @@ class GradCam:
         self.img_path: str | None = None
 
     def select_image(self) -> str:
-        """Open a file dialog and select an image for Grad-CAM.
-        Returns:
-            Selected image path as a string.
-        Raises:
-            SystemExit: If no file is selected.
+        """
+        Select image
+        Opens a file dialog; exits if no file is chosen.
+        Outputs:
+        - str: Selected image path.
         """
         root = tk.Tk()
         root.withdraw()
@@ -246,7 +246,10 @@ class GradCam:
         return img_path
 
     def make_tfm(self):
-        """Build the preprocessing transform for Grad-CAM inference."""
+        """
+        Build transform
+        Returns the preprocessing transform for Grad-CAM inference.
+        """
         return transforms.Compose([
             transforms.Resize((self.config.IMG_SIZE, self.config.IMG_SIZE)),
             transforms.ToTensor(),
@@ -254,13 +257,11 @@ class GradCam:
         ])
 
     def prepare_model_and_input(self):
-        """Load weights, set eval mode, and prepare model input.
-        Returns:
-            (inp, rgb):
-                inp: Input tensor of shape [1, 3, IMG_SIZE, IMG_SIZE] on device.
-                rgb: Float numpy array of shape [IMG_SIZE, IMG_SIZE, 3] in [0, 1].
-        Raises:
-            RuntimeError: If no image path was selected (self.img_path is None).
+        """
+        Prepare input
+        Loads checkpoint, sets eval mode and preprocesses the selected image.
+        Outputs:
+        - tuple: (inp [1,3,H,W] tensor on device, rgb [H,W,3] numpy array in [0,1]).
         """
         self.model.load_state_dict(self.state, strict=False)
         self.model.to(self.config.device)
@@ -281,17 +282,14 @@ class GradCam:
         return inp, rgb
 
     def compute_cam(self, inp, rgb):
-        """Compute prediction and Grad-CAM heatmap.
+        """
+        Compute heatmap
+        Runs inference and generates the Grad-CAM activation map.
         Parameters:
-            inp: Input tensor [1, 3, H, W] on device.
-            rgb: Numpy image [H, W, 3] in [0, 1] for visualization.
-        Returns:
-            (vis, grayscale, p_ok, p_nok, label_str):
-                vis: RGB uint8 image with CAM overlay.
-                grayscale: CAM heatmap [H, W] in [0, 1].
-                p_ok: Probability of OK (sigmoid(logit)).
-                p_nok: Probability of NOK (1 - p_ok).
-                label_str: "OK" or "NOK" based on cfg.THRESH_OK.
+        - inp: Input tensor [1,3,H,W] on device.
+        - rgb: Numpy image [H,W,3] in [0,1] for overlay.
+        Outputs:
+        - tuple: (vis overlay, grayscale heatmap, p_ok, p_nok, label_str).
         """
         with torch.inference_mode():
             logit = self.model(inp)  # [1,1]
@@ -317,17 +315,15 @@ class GradCam:
         return vis, grayscale, p_ok, p_nok, label_str
 
     def visualize(self, vis, grayscale, p_ok, p_nok, label_str):
-        """Display the Grad-CAM overlay and heatmap using matplotlib.
+        """
+        Visualize
+        Displays Grad-CAM overlay and heatmap side-by-side using matplotlib.
         Parameters:
-            vis: Overlay image (RGB) to show.
-            grayscale: Heatmap array [H, W] in [0, 1].
-            p_ok: Predicted P(OK).
-            p_nok: Predicted P(NOK).
-            label_str: Final label string ("OK" / "NOK").
-        Returns:
-            None
-        Raises:
-            RuntimeError: If self.img_path is None.
+        - vis: RGB overlay image.
+        - grayscale: Heatmap array [H,W] in [0,1].
+        - p_ok (float): Predicted P(OK).
+        - p_nok (float): Predicted P(NOK).
+        - label_str (str): "OK" or "NOK".
         """
         if self.img_path is None:
             raise RuntimeError("missing path.")
@@ -365,6 +361,10 @@ class GradCam:
         print(f"thr_OK  : {self.config.THRESH_OK:.2f}")
 
     def run(self):
+        """
+        Run
+        Executes the full Grad-CAM workflow: select image, prepare input, compute and display heatmap.
+        """
         self.select_image()
         inp, rgb = self.prepare_model_and_input()
         vis, grayscale, p_ok, p_nok, label_str = self.compute_cam(inp, rgb)

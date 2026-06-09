@@ -19,8 +19,8 @@ class AugmentConfig:
     Outputs:
     - AugmentConfig: Configuration object used by augmentation utilities.
     """
-    SRC_DIR: Path = Path(r"Q:\VisualStudio\ML_Model\data\zdjecia_kopia\zle")
-    DEST_DIR: Path = Path(r"Q:\VisualStudio\ML_Model\data\augmented3")
+    SRC_DIR: Path = Path(r"data/input_data/nok")
+    DEST_DIR: Path = Path(r"data/nok_augmented")
     GOOD_COUNT: int = 9809
     IMG_EXTS: tuple[str, ...] = (".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff")
 

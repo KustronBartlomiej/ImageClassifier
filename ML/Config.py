@@ -17,17 +17,17 @@ class CFG:
     - SAVE_CKPT: path to save best checkpoint
     - batch_size, num_workers, img_size, seed: training settings
     """
-    ROOT: Path = Path(r"Q:\VisualStudio\ML_Model\InputData3")
-    TRAIN_DIR: Path = Path(r"Q:\VisualStudio\ML_Model\InputData3\train")
-    VAL_DIR: Path = Path(r"Q:\VisualStudio\ML_Model\InputData3\val")
-    TEST_DIR: Path = Path(r"Q:\VisualStudio\ML_Model\InputData3\test")
+    ROOT: Path = Path(r"data/Split")
+    TRAIN_DIR: Path = Path(r"data/Split/train")
+    VAL_DIR: Path = Path(r"data/Split/val")
+    TEST_DIR: Path = Path(r"data/Split/test")
 
-    CKPT_PATH: str = r"Q:\VisualStudio\ML_Model\ML\best2_ft.pt"
+    CKPT_PATH: str = r"ML/best3.pt"
 
-    SAVE_CKPT: str = r"Q:\VisualStudio\ML_Model\ML\best3.pt"
+    SAVE_CKPT: str = r"ML/best4.pt"
 
     batch_size: int = 64
-    num_workers: int = 4
+    num_workers: int = 0
     img_size: int = 128
     seed: int = 42
 
@@ -42,8 +42,6 @@ class CNN(nn.Module):
         """
         Initialize
         Builds the convolutional backbone and classification head.
-        Parameters:
-        - self: CNN
         """
         super().__init__()
 

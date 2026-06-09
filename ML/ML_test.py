@@ -52,7 +52,7 @@ class TestEvaluator(Evaluator):
         y_true = np.concatenate(y_true_list)
         y_score = np.concatenate(y_score_list)
 
-        print(f"[TEST] collected {len(y_true)} probes from TESTU.")
+        print(f"[TEST] collected {len(y_true)} probes from TEST.")
         return y_true, y_score
 
     def run(self):
