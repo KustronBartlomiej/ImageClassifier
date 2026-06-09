@@ -4,7 +4,7 @@ from pathlib import Path
 @dataclass
 class EvalCFG:
     """
-    Configaration
+    Configuration
     Used in ML_test
     """
     THRESH_OK: float = 0.57 #0.65

@@ -92,7 +92,7 @@ class Evaluator:
         Collects ground-truth labels and P(OK) scores from the validation loader.
         Outputs:
         - Tuple[np.ndarray, np.ndarray]:
-        - y_true: Ground-truth labels as dataset indices.
+        - y_true: ImageFolder class indices (alphabetical: NOK=0, OK=1).
         - y_score: Predicted probabilities P(OK) for each sample.
         """
         y_true_list: list[np.ndarray] = []

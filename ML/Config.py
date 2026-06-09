@@ -42,8 +42,6 @@ class CNN(nn.Module):
         """
         Initialize
         Builds the convolutional backbone and classification head.
-        Parameters:
-        - self: CNN
         """
         super().__init__()
 

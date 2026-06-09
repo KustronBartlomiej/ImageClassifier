@@ -70,6 +70,7 @@ class Loader:
     - Loader: Initialized object with datasets, loaders and optim components.
     """
     def __init__(self, model: nn.Module, cfg: CFG):
+        """Set attributes to None; call prepare() to initialize them."""
         self.model = model
         self.config = cfg
 
@@ -182,9 +183,9 @@ class Loader:
             if isinstance(state, dict) and "model_state_dict" in state:
                 state = state["model_state_dict"]
             missing, unexpected = self.model.load_state_dict(state, strict=False)
-            print("Wczytywanie wag zakończone. Brakujące:", missing, "| Nieoczekiwane:", unexpected)
+            print("Checkpoint loaded. Missing:", missing, "| Unexpected:", unexpected)
         except FileNotFoundError:
-            print(f"Brak pliku {self.config.CKPT_PATH} – startuję z losowymi wagami.")
+            print(f"Checkpoint not found: {self.config.CKPT_PATH} – starting with random weights.")
 
         self.criterion = nn.BCEWithLogitsLoss()
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=1e-4, weight_decay=7e-4)
@@ -356,7 +357,7 @@ class Trainer:
         plt.plot(range(1, len(self.val_accs) + 1),   self.val_accs,   label="val acc")
         plt.xlabel("Epoch")
         plt.ylabel("Accuracy")
-        plt.title("accuracy and learning")
+        plt.title("Train / Val Accuracy")
         plt.legend()
         plt.grid(True)
         plt.show()
