@@ -8,7 +8,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class CFG:
+class ConfigClass:
     """
     Split config
     Stores input folders, output root, split sizes and random seeds for dataset splitting.
@@ -23,7 +23,7 @@ class CFG:
     - SEED2 (int): Seed for the second group split.
     - IMG_EXTS (tuple[str, ...]): Allowed image extensions.
     Outputs:
-    - CFG: Configuration object for SplitSet.
+    - ConfigClass: Configuration object for SplitSet.
     """
     OK_DIR: Path = Path(r"data/input_data/ok")
     NOK_ORIG_DIR: Path = Path(r"data/input_data/nok")
@@ -43,17 +43,17 @@ class SplitSet:
     Group-based dataset splitter
     Builds an index of OK/NOK images and creates train/val/test splits without group leakage.
     Parameters:
-    - cfg (CFG): Split configuration.
+    - cfg (ConfigClass): Split configuration.
     Outputs:
     - SplitSet: Split helper object.
     """
 
-    def __init__(self, cfg: CFG):
+    def __init__(self, cfg: ConfigClass):
         """
         Init
         Stores configuration for listing, grouping, splitting and copying images.
         Parameters:
-        - cfg (CFG): Split configuration.
+        - cfg (ConfigClass): Split configuration.
         Outputs:
         - None
         """
@@ -340,7 +340,7 @@ class SplitSet:
 
 
 if __name__ == "__main__":
-    cfg = CFG()
+    cfg = ConfigClass()
     split = SplitSet(cfg)
 
     n_ok = len(split.list_images(cfg.OK_DIR))

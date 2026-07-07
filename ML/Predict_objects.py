@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 
 
 @dataclass
-class CFG:
+class ConfigClass:
     """
     Configuration class for prediction and visualization
 
@@ -68,10 +68,10 @@ class PredictPhoto:
     """
     Single image prediction without Grad-CAM
 
-    self.config: CFG object
+    self.config: ConfigClass object
     self.model: Torch model used for logits computation
     """
-    def __init__(self, cfg: CFG, model: nn.Module):
+    def __init__(self, cfg: ConfigClass, model: nn.Module):
         self.config = cfg
         self.model = model.to(cfg.device)
 
@@ -211,10 +211,10 @@ class GradCam:
     Grad-CAM
     Loads model weights, runs inference and produces a heatmap overlay.
     Parameters:
-    - cfg (CFG): Inference and visualization configuration.
+    - cfg (ConfigClass): Inference and visualization configuration.
     - model (nn.Module): Torch model used for inference and Grad-CAM.
     """
-    def __init__(self, cfg: CFG, model: nn.Module):
+    def __init__(self, cfg: ConfigClass, model: nn.Module):
         self.config = cfg
         self.model = model.to(self.config.device)
         state = torch.load(self.config.CKPT_PATH, map_location=self.config.device)
@@ -375,7 +375,7 @@ if __name__ == "__main__":
     """Full Grad-CAM workflow: select image -> prepare -> compute -> visualize.
     May also call PredictPhoto to show result without Grad-CAM
     """
-    cfg = CFG()
+    cfg = ConfigClass()
     model = CNN()
 
     grad_cam = GradCam(cfg, model)

@@ -26,11 +26,11 @@ Key packages: `torch==2.10.0`, `torchvision==0.25.0`, `scikit-learn`,
 ```
 .
 ├── ML/
-│   ├── Config.py                # training CFG + CNN model definition
+│   ├── Config.py                # training ConfigClass + CNN model definition
 │   ├── ML_objects.py            # Loader + Trainer (training pipeline)
 │   ├── ML_val.py                # validation evaluator
 │   ├── ML_test.py               # test evaluator
-│   ├── TestConfig.py            # EvalCFG (checkpoint path, threshold)
+│   ├── TestConfig.py            # EvalConfigClass (checkpoint path, threshold)
 │   ├── Predict_objects.py       # single-image inference + Grad-CAM
 │   ├── Predict_many_objects.py  # batch inference → CSV
 │   ├── best3.pt                 # previous checkpoint
@@ -121,7 +121,7 @@ python split.py
 
 ## Configuration / Paths
 
-Each module has a `CFG` (or `EvalCFG`) dataclass at the top of its file.
+Each module has a `ConfigClass` (or `EvalConfigClass`) dataclass at the top of its file.
 Set the paths there before running.
 
 ### Training (`ML/Config.py`)
@@ -150,7 +150,7 @@ Set the paths there before running.
 | `THRESH_OK` | `0.57`        | Decision threshold P(OK)          |
 | `TTA_VIEWS` | `6`           | Number of TTA views               |
 
-> To use **best4.pt** (current best), change `CKPT_PATH` in the CFG dataclass.
+> To use **best4.pt** (current best), change `CKPT_PATH` in the ConfigClass dataclass.
 
 ### Batch inference (`ML/Predict_many_objects.py`)
 
@@ -296,7 +296,7 @@ cd ML
 python ML_val.py
 ```
 
-Loads the checkpoint from `ML/TestConfig.py → EvalCFG.CKPT_PATH` (default: `ML/best4.pt`).
+Loads the checkpoint from `ML/TestConfig.py → EvalConfigClass.CKPT_PATH` (default: `ML/best4.pt`).
 Computes accuracy, balanced accuracy, precision, recall, F1, ROC AUC, PR AUC,
 MCC, Cohen's κ, log loss, and Brier score. Also reports per-class error rates
 (NOK→OK rate, OK→NOK rate).
@@ -310,7 +310,7 @@ cd ML
 python ML_test.py
 ```
 
-Same metrics on the test set using the fixed threshold from `EvalCFG.THRESH_OK`.
+Same metrics on the test set using the fixed threshold from `EvalConfigClass.THRESH_OK`.
 Plots: confusion matrix, ROC curve, PR curve.
 
 ---
@@ -320,7 +320,7 @@ Plots: confusion matrix, ROC curve, PR curve.
 ### Single-image prediction (`Predict_objects.py`)
 
 `ML/Predict_objects.py` provides two modes: **Grad-CAM visualization** and
-**TTA-based prediction**. Both load the checkpoint from `CFG.CKPT_PATH`
+**TTA-based prediction**. Both load the checkpoint from `ConfigClass.CKPT_PATH`
 (default: `ML/best3.pt`; change to `ML/best4.pt` to use the current best).
 
 #### Grad-CAM (default `__main__`)
@@ -342,10 +342,10 @@ A file dialog opens. After selecting an image:
 **Option A — from Python:**
 
 ```python
-from Predict_objects import CFG, PredictPhoto
+from Predict_objects import ConfigClass, PredictPhoto
 from ML_objects import CNN
 
-cfg = CFG()
+cfg = ConfigClass()
 model = CNN()
 PredictPhoto(cfg, model).predict_one()
 ```
@@ -354,7 +354,7 @@ PredictPhoto(cfg, model).predict_one()
 
 ```python
 if __name__ == "__main__":
-    cfg = CFG()
+    cfg = ConfigClass()
     model = CNN()
     PredictPhoto(cfg, model).predict_one()
 ```
@@ -383,7 +383,7 @@ P(NOK)   : 0.1569  (base=0.1898)
 | micro-blur | resize +2px then back to 128×128   |
 | crop       | 2% border removed on each side     |
 
-The number of views is controlled by `CFG.TTA_VIEWS` (default: 6).
+The number of views is controlled by `ConfigClass.TTA_VIEWS` (default: 6).
 
 ---
 
@@ -396,11 +396,11 @@ cd ML
 python Predict_many_objects.py
 ```
 
-Configure paths and expected label in `CFG` at the top of the file before running.
+Configure paths and expected label in `ConfigClass` at the top of the file before running.
 To evaluate a directory where all images share the same ground-truth label, set `EXPECTED_LABEL`:
 
 ```python
-cfg = CFG(
+cfg = ConfigClass(
     IMG_DIR=Path("data/Split/val/NOK"),
     EXPECTED_LABEL="NOK",   # or "OK"; set "N/A" to disable the correct column
 )
@@ -408,7 +408,7 @@ cfg = CFG(
 
 #### Output CSV structure
 
-Saved to `CFG.CSV_PATH` (default: `results/predictions.csv`).
+Saved to `ConfigClass.CSV_PATH` (default: `results/predictions.csv`).
 
 | Column       | Type    | Description                                                     |
 |--------------|---------|-----------------------------------------------------------------|
@@ -478,5 +478,5 @@ Example row:
   (`ML/`, `Augment/`, `Split/`).
 - **Current best checkpoint:** `ML/best4.pt` — used by `ML_test.py`, `ML_val.py`,
   and `Predict_many_objects.py`. `Predict_objects.py` defaults to `best3.pt`;
-  update `CFG.CKPT_PATH` to switch.
+  update `ConfigClass.CKPT_PATH` to switch.
 - Grad-CAM requires the `grad-cam` package (included in `requirements.txt`).

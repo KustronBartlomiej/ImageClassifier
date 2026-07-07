@@ -1,4 +1,4 @@
-from Config import CFG, CNN
+from Config import ConfigClass, CNN
 
 import random
 import numpy as np
@@ -65,11 +65,11 @@ class Loader:
     Prepares device, datasets, dataloaders, and training components.
     Parameters:
     - model (nn.Module): Model to train/evaluate.
-    - cfg (CFG): Project configuration with paths and hyperparameters.
+    - cfg (ConfigClass): Project configuration with paths and hyperparameters.
     Outputs:
     - Loader: Initialized object with datasets, loaders and optim components.
     """
-    def __init__(self, model: nn.Module, cfg: CFG):
+    def __init__(self, model: nn.Module, cfg: ConfigClass):
         """Set attributes to None; call prepare() to initialize them."""
         self.model = model
         self.config = cfg
@@ -216,7 +216,7 @@ class Trainer:
     Training
     Runs the training loop, validation, checkpointing, and history tracking.
     Parameters:
-    - cfg (CFG): Configuration with checkpoint path and save path.
+    - cfg (ConfigClass): Configuration with checkpoint path and save path.
     - model (nn.Module): Model to train.
     - loader (Loader): Prepared Loader with data and optim components.
     Outputs:
@@ -364,7 +364,7 @@ class Trainer:
 
 
 if __name__ == "__main__":
-    cfg = CFG()
+    cfg = ConfigClass()
     model = CNN()
 
     loader = Loader(model, cfg).prepare()

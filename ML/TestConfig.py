@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 @dataclass
-class EvalCFG:
+class EvalConfigClass:
     """
     Configuration
     Used in ML_test
