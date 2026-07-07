@@ -30,8 +30,8 @@ from sklearn.metrics import (
 
 import matplotlib.pyplot as plt
 
-from Config import CFG, CNN
-from TestConfig import EvalCFG
+from Config import ConfigClass, CNN
+from TestConfig import EvalConfigClass
 from ML_objects import Loader
 
 
@@ -40,20 +40,20 @@ class Evaluator:
     Validation
     Evaluates a trained OK/NOK binary classifier on the validation set and reports metrics and plots.
     Parameters:
-    - train_cfg (CFG): Training config used to build loaders and transforms.
-    - eval_cfg (EvalCFG): Evaluation config with checkpoint path, threshold and plot settings.
+    - train_cfg (ConfigClass): Training config used to build loaders and transforms.
+    - eval_cfg (EvalConfigClass): Evaluation config with checkpoint path, threshold and plot settings.
     - model (nn.Module): Model instance used for inference.
     Outputs:
     - Evaluator: Configured evaluator ready to run evaluation.
     """
 
-    def __init__(self, train_cfg: CFG, eval_cfg: EvalCFG, model: nn.Module):
+    def __init__(self, train_cfg: ConfigClass, eval_cfg: EvalConfigClass, model: nn.Module):
         """
         Setup
         Builds loaders, loads checkpoint weights and prepares the model for evaluation.
         Parameters:
-        - train_cfg (CFG): Training config used to build loaders and transforms.
-        - eval_cfg (EvalCFG): Evaluation config with checkpoint path, threshold and plot settings.
+        - train_cfg (ConfigClass): Training config used to build loaders and transforms.
+        - eval_cfg (EvalConfigClass): Evaluation config with checkpoint path, threshold and plot settings.
         - model (nn.Module): Model instance used for inference.
         Outputs:
         - None
@@ -70,7 +70,7 @@ class Evaluator:
 
         self.device = self.loader.device
 
-        # Load model weights from the checkpoint defined in EvalCFG
+        # Load model weights from the checkpoint defined in EvalConfigClass
         state = torch.load(self.eval_cfg.CKPT_PATH, map_location=self.device)
         if isinstance(state, dict) and "model_state_dict" in state:
             state = state["model_state_dict"]
@@ -137,7 +137,7 @@ class Evaluator:
     def compute_and_print_metrics(self, y_true: np.ndarray, y_score: np.ndarray):
         """
         Metrics
-        Computes and prints metrics for a fixed threshold EvalCFG.THRESH_OK where y_score is P(OK).
+        Computes and prints metrics for a fixed threshold EvalConfigClass.THRESH_OK where y_score is P(OK).
         Parameters:
         - y_true (np.ndarray): Ground-truth labels as dataset indices.
         - y_score (np.ndarray): Predicted probabilities P(OK).
@@ -368,7 +368,7 @@ class Evaluator:
             f"Best threshold (max F1 on this set): {best_threshold:.3f}  "
             f"(F1={f1_scores[best_idx]:.4f})"
         )
-        print(f"Used EvalCFG.THRESH_OK threshold    : {thr_used:.3f}")
+        print(f"Used EvalConfigClass.THRESH_OK threshold    : {thr_used:.3f}")
 
         fig, ax = plt.subplots()
         ax.plot(thresh, f1_scores[:-1], label="F1-score")
@@ -389,7 +389,7 @@ class Evaluator:
     def plot_curves(self, y_true: np.ndarray, y_score: np.ndarray):
         """
         Plots
-        Generates ROC, PR and score histogram plots if EvalCFG.PLOT_CURVES is enabled.
+        Generates ROC, PR and score histogram plots if EvalConfigClass.PLOT_CURVES is enabled.
         Parameters:
         - y_true (np.ndarray): Ground-truth labels as dataset indices.
         - y_score (np.ndarray): Predicted probabilities P(OK).
@@ -418,8 +418,8 @@ class Evaluator:
 
 
 if __name__ == "__main__":
-    train_cfg = CFG()
-    eval_cfg = EvalCFG()
+    train_cfg = ConfigClass()
+    eval_cfg = EvalConfigClass()
 
     train_cfg.CKPT_PATH = str(eval_cfg.CKPT_PATH)
 

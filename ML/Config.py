@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 @dataclass
-class CFG:
+class ConfigClass:
     """
     Configuration
     Stores training/evaluation paths and basic parameters.

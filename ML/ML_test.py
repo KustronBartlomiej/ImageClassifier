@@ -5,8 +5,8 @@ from typing import Tuple
 
 import numpy as np
 
-from Config import CFG, CNN
-from TestConfig import EvalCFG
+from Config import ConfigClass, CNN
+from TestConfig import EvalConfigClass
 from ML_val import Evaluator   
 
 
@@ -15,8 +15,8 @@ class TestEvaluator(Evaluator):
     Testing
     Final test evaluation that uses test_loader and a fixed threshold.
     Parameters:
-    - train_cfg (CFG): Training config (paths, checkpoint path, etc.).
-    - eval_cfg (EvalCFG): Evaluation config with THRESH_OK and settings.
+    - train_cfg (ConfigClass): Training config (paths, checkpoint path, etc.).
+    - eval_cfg (EvalConfigClass): Evaluation config with THRESH_OK and settings.
     - model (CNN | nn.Module): Model used for inference.
     Outputs:
     - TestEvaluator: Evaluator subclass configured for test reporting.
@@ -69,8 +69,8 @@ class TestEvaluator(Evaluator):
 
 
 if __name__ == "__main__":
-    train_cfg = CFG()
-    eval_cfg = EvalCFG()  
+    train_cfg = ConfigClass()
+    eval_cfg = EvalConfigClass()  
 
     train_cfg.CKPT_PATH = str(eval_cfg.CKPT_PATH)
 

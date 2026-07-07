@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 
 @dataclass
-class CFG:
+class ConfigClass:
     """
     Configuration for batch prediction.
     CKPT_PATH:      Path to trained checkpoint weights.
@@ -49,10 +49,10 @@ class PredictMany:
     Batch prediction
     Runs TTA inference on all images in a directory and saves results to a CSV file.
     Parameters:
-    - cfg (CFG): Batch prediction configuration.
+    - cfg (ConfigClass): Batch prediction configuration.
     - model (nn.Module): Torch model used for inference.
     """
-    def __init__(self, cfg: CFG, model: nn.Module):
+    def __init__(self, cfg: ConfigClass, model: nn.Module):
         """Load checkpoint once and prepare model for inference."""
         self.config = cfg
         self.predictor = PredictPhoto(cfg, model)
@@ -143,7 +143,7 @@ class PredictMany:
 
 
 if __name__ == "__main__":
-    cfg = CFG()
+    cfg = ConfigClass()
     model = CNN()
 
     predictor = PredictMany(cfg, model)
